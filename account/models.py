@@ -66,3 +66,35 @@ class Post(modles.Model):
     created_at = models.DateField(auto_now_add=True)
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     body = models.TextField()
+
+
+class Post(BaseModel):
+    id = models.AutoField(primary_key=True)
+    to_date = models.DateField()
+    title = models.CharField(max_length=50)
+    content = models.TextField()
+    status = models.CharField(max_length=2)
+    board = models.ForeignKey(Board, on_delete=models.CASCADE)
+
+    def __int__(self):
+        return self.id
+
+    class Meta:
+        db_table = 'post'
+
+
+# 이미지 업로드 경로
+def image_upload_path(instance, filename):
+    return f'{instance.post.id}/{filename}'
+
+
+class PostImage(models.Model):
+    id = models.AutoField(primary_key=True)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='image')
+    image = models.ImageField(upload_to=image_upload_path)
+
+    def __int__(self):
+        return self.id
+
+    class Meta:
+        db_table = 'post_image'
