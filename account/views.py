@@ -19,4 +19,10 @@ class UserCreate(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-# Create your views here.
+class PostViewSet(ModelViewSet):
+    queryset = Post.objects.all().order_by('-created_at')
+    serializer_class = PostSerializer
+    pagination_class = CustomResultsSetPagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = PostFilter
+    permission_classes = [IsSuperUserOrReadOnly]
